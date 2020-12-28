@@ -26,6 +26,7 @@ const typeDefs = gql`
 
   type Teamql {
     id: Int!
+    name: String!
     owner: Userql!
     users: [Userql]
     channels: [Channelql]
@@ -33,7 +34,27 @@ const typeDefs = gql`
 
   type Query {
     hello: String
+    getUser(id: String): Userql!
+    allUsers: [Userql]
+    allTeams: [Teamql]
+    allChannels: [Channelql]
+    allMessages: [Messageql]
   }
+
+  type Mutation {
+    # USER
+    createUser(name: String, email: String, password: String ): Userql
+
+    #TEAM
+    createTeam(name: String): Boolean
+
+    #CHANNNEL
+    createChannel(teamId: Int,name: String,public: Boolean): Boolean
+
+   #MESSAGE
+    createMessage(channelId: Int, text: String): Boolean
+  }
+
 `;
 
 module.exports = { typeDefs }
