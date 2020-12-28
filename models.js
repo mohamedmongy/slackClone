@@ -79,7 +79,7 @@ UserChannel.init({
     channelId: {
         type: DataTypes.INTEGER,
         references: {
-          model: Team, 
+          model: Channel, 
           key: 'id'
         }
     }
@@ -139,39 +139,3 @@ setupDB()
 
 const models = { User , Member , Message , Channel, Team, UserTeam, UserChannel } 
 module.exports = { sequelize , setupDB, models: models }
-
-
-
-
-
-// connect to postgres sql user om local 
-//From CLI:
-// $ su - mongy (OS username)
-// paaword (OS password) 
-// $ psql mongydb
-// mongydb=# CREATE USER mongy_user WITH PASSWORD 'mongy_password';
-// mongydb=# GRANT ALL PRIVILEGES ON DATABASE "mongydb" to mongy_user;
-// mongydb=# \q
-
-// \d   >> see all tables 
-// \d tablename  >>  see table coloumns
-
-// connect to heroku postgres on remote 
-// cpoy and paste the following in your  CLI
-// heroku pg:info  
-// heroku pg:psql
-
-// for live  heroku DB
-// pg.defaults.ssl = true;
-//postgres://username:password@host:port/database_name.
-// postgres://hljjvyixjpvxzt:7a2f0642432a881c6ede6555e7262b892bdf6071924a3c014495e7da113f7b33@ec2-34-237-166-54.compute-1.amazonaws.com:5432/d28j977onra74h
-// const sequelize = new Sequelize('postgres://hljjvyixjpvxzt:7a2f0642432a881c6ede6555e7262b892bdf6071924a3c014495e7da113f7b33@ec2-34-237-166-54.compute-1.amazonaws.com:5432/d28j977onra74h', {
-    //         protocol: 'postgres',
-//         dialect:  'postgres',
-//         dialectOptions: {
-//           ssl: {
-//             require: true,
-//             rejectUnauthorized: false // this fix unauthrized ssl self signed certificate error
-//           }
-//       }
-// });
