@@ -2,6 +2,16 @@ const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
 
+  type ErrorQl {
+    path: String
+    message: String
+  }
+  type RegisterResponse {
+    ok: Boolean
+    user: Userql
+    errors: [ErrorQl]
+  }
+
   type Userql {
     id: Int!
     name: String!
@@ -43,7 +53,7 @@ const typeDefs = gql`
 
   type Mutation {
     # USER
-    register(name: String, email: String, password: String ): Boolean
+    register(name: String, email: String, password: String): RegisterResponse
 
     #TEAM
     createTeam(name: String): Boolean

@@ -1,6 +1,16 @@
 
 const  bcrypt = require('bcrypt');
+var _ = require('lodash');
+const { Sequelize  } = require('sequelize');
+
 const saltRounds = 12;
+
+const formatErrors = (e, models) => {
+  if (e instanceof Sequelize.ValidationError) {
+    return e.errors.map(x => _.pick(x, ['path', 'message']));
+  }
+  return [{ path: 'name', message: 'something went wrong' }];
+};
 
 const resolvers = {
     Query: {
@@ -23,15 +33,34 @@ const resolvers = {
     },
     Mutation:  {
       register: async (parent, { password, ...otherArgs }, { models }, __ ) => {
-        const hashedPassword =  await bcrypt.hash(password, saltRounds);
-        const user = await models.User.create({ ...otherArgs, password: hashedPassword });
-        console.log(` user >>>>> ${user.name}`)
-        console.log(` user >>>>> ${user.email}`)
-        console.log(` user >>>>> ${user.password}`)
-        if (user) {
-          return true 
-        } else {
-          return false
+
+        if (password.length < 5) {
+          return {
+            ok: false,
+            errors: [{ path: "REGISTER" , message: "the password need to be greater than 5 characters long!"}]
+          }
+        }
+
+        try {
+          const hashedPassword =  await bcrypt.hash(password, saltRounds);
+          const user = await models.User.create({ ...otherArgs, password: hashedPassword });
+          console.log(` user >>>>> ${user.name}, ${user.email}, ${user.password}`)
+          if (user) {
+            return {
+              ok: true,
+              user: user
+            } 
+          } else {
+            return {
+              ok: false,
+              errors: [{ path: "REGISTER", message: "please try again some thing went wrong!" }]
+            } 
+          }
+        } catch(err) {
+          return {
+            ok: false,
+            errors: formatErrors(err, models)
+          }
         }
       },
       createTeam: async (parent, args, { models , user}, __ ) => {

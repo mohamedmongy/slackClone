@@ -9,20 +9,35 @@ const  sequelize = new Sequelize('slack', 'mongy', '', {
     dialect:  'postgres'
 });
 
-
 // User         
 class User extends Model { }
 User.init({
     name: {
        type: DataTypes.STRING,
-       unique: true
-},
+       unique: true,
+       validate: {
+           isAlphanumeric: {
+               args: true,
+               msg: "will only allow alphanumeric characters, so allow only letters and numbers"
+           },
+           len: {
+               args: [3,25],
+               msg: " the user name need to be between 3 and 25 characters long"
+            } 
+       }
+    },
    password: {
        type: DataTypes.STRING,
    },
     email: {
        type: DataTypes.STRING,
-       unique: true
+       unique: true,
+       validate: {
+        isEmail: {
+            args: true,
+            msg: "invalid Email!"
+        }
+    }
    }
    }, { sequelize, modelName: 'user' });
 
