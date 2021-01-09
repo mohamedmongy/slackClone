@@ -1,4 +1,7 @@
 
+const  bcrypt = require('bcrypt');
+const saltRounds = 12;
+
 const resolvers = {
     Query: {
       hello: () => 'Hello there!',
@@ -19,8 +22,17 @@ const resolvers = {
       }
     },
     Mutation:  {
-      createUser: async (parent, args, { models }, __ ) => {
-        return await models.User.create(args);
+      register: async (parent, { password, ...otherArgs }, { models }, __ ) => {
+        const hashedPassword =  await bcrypt.hash(password, saltRounds);
+        const user = await models.User.create({ ...otherArgs, password: hashedPassword });
+        console.log(` user >>>>> ${user.name}`)
+        console.log(` user >>>>> ${user.email}`)
+        console.log(` user >>>>> ${user.password}`)
+        if (user) {
+          return true 
+        } else {
+          return false
+        }
       },
       createTeam: async (parent, args, { models , user}, __ ) => {
         try {

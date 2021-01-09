@@ -5,7 +5,7 @@ const { resolvers }  = require('./graphql/resolvers');
 const { typeDefs }  = require('./graphql/types');
 
 
-const server = new ApolloServer({ typeDefs, resolvers , context: { sequelize, models }});
+const server = new ApolloServer({ typeDefs, resolvers , context: { sequelize, models, user: {id: 1} }});
 const app = express();
 server.applyMiddleware({ app });
 
