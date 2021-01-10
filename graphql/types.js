@@ -6,9 +6,17 @@ const typeDefs = gql`
     path: String
     message: String
   }
+
   type RegisterResponse {
     ok: Boolean
     user: Userql
+    errors: [ErrorQl]
+  }
+
+  type LoginResponse {
+    ok: Boolean
+    token: String
+    refreshToken: String
     errors: [ErrorQl]
   }
 
@@ -54,6 +62,7 @@ const typeDefs = gql`
   type Mutation {
     # USER
     register(name: String, email: String, password: String): RegisterResponse
+    login(email: String!, password: String!): LoginResponse
 
     #TEAM
     createTeam(name: String): Boolean

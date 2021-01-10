@@ -2,6 +2,8 @@
 const  bcrypt = require('bcrypt');
 var _ = require('lodash');
 const { Sequelize  } = require('sequelize');
+const  { createTokens , refreshTokens, tryLogin } = require('./auth');
+
 
 const saltRounds = 12;
 
@@ -32,6 +34,10 @@ const resolvers = {
       }
     },
     Mutation:  {
+      login: (parent, { email, password }, { models, SECRET, SECRET2 }, __ ) => {
+        console.log(email, password, SECRET, SECRET2)
+        return tryLogin(email, password, models, SECRET,SECRET2)
+      },
       register: async (parent, { password, ...otherArgs }, { models }, __ ) => {
 
         if (password.length < 5) {
